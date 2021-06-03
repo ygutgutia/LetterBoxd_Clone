@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
+
+import 'authentication_service.dart';
 import '../themes.dart';
+
 
 enum AuthPage{
   Login,
@@ -18,8 +22,10 @@ class _LoginClass extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordCont = TextEditingController();
   AuthPage _currAuth = AuthPage.Login;
-  String email;
-  String pass;
+  String emailEntered;
+  String passwordEntered;
+
+  bool isUserLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +59,7 @@ class _LoginClass extends State<LoginPage> {
                         style: TextStyle(color: formFieldTextColor),
                         keyboardType: TextInputType.emailAddress,
                         onSaved: (String value) {
-                          email = value;
+                          emailEntered = value;
                         },
                         decoration: const InputDecoration(
                           hintText: 'Email Address',
@@ -75,14 +81,14 @@ class _LoginClass extends State<LoginPage> {
                         controller: _passwordCont,
                         obscureText: true,
                         onSaved: (String value) {
-                            pass = value;
+                            passwordEntered = value;
                         },
                         decoration: const InputDecoration(
                           hintText: 'Password',
                           hintStyle: TextStyle(color: hintTextColor),
                         ),
                         validator: (String value) {
-                          if ( _currAuth == AuthPage.Signup && !validateStructure(value)) {
+                          if (_currAuth == AuthPage.Signup && !validateStructure(value)) {
                             return 'Password must have atleast one UC, LC, num, sc, and 6 digits';
                           }else if(value==''){
                             return 'Enter a Password';
@@ -112,15 +118,19 @@ class _LoginClass extends State<LoginPage> {
 
                     SizedBox(height: 13.0,),
 
-                    ElevatedButton(
-                      child: Text(_currAuth == AuthPage.Signup ? 'Sign Up' : 'Login'),
-                        onPressed: () {
-                        _formKey.currentState.save();
-                        if (_formKey.currentState.validate()) {
-                          // Save
-                        }
-                      },
-                    ),
+                    isUserLoading ? CircularProgressIndicator() :
+                                    ElevatedButton(
+                                      child: Text(_currAuth == AuthPage.Signup ? 'Sign Up' : 'Login'),
+                                        onPressed: () {
+                                        _formKey.currentState.save();
+                                        if (_formKey.currentState.validate()) {
+                                          setState((){
+                                            isUserLoading = true;
+                                          });
+                                          _submitForm();
+                                        }
+                                      },
+                                    ),
                     
                     _currAuth == AuthPage.Login ? TextButton(
                       onPressed: () {
@@ -153,5 +163,42 @@ class _LoginClass extends State<LoginPage> {
         String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
         RegExp regExp = new RegExp(pattern);
         return regExp.hasMatch(value);
+  }
+
+  void _submitForm() async{
+
+    String returnMsg = (_currAuth == AuthPage.Login) ?
+            await context.read<AuthenticationService>().signIn(email: emailEntered.trim(), password: passwordEntered.trim()) :
+            await context.read<AuthenticationService>().signUp(email: emailEntered.trim(), password: passwordEntered.trim());
+
+    if (returnMsg == "Success") {
+      _formKey.currentState.reset();
+      isUserLoading = false;
+      if(_currAuth == AuthPage.Signup)
+        Navigator.pushReplacementNamed(context, '/homepage');
+      else
+        Navigator.pushReplacementNamed(context, '/homepage');
+    }
+    else {
+      print(returnMsg);
+      _formKey.currentState.reset();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Wrong Details"),
+            content: Text(returnMsg),
+            actions: <Widget>[
+              TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+            ],
+          );
+        },
+      );
+    }
+
   }
 }

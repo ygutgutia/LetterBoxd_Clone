@@ -8,3 +8,6 @@ Color elevatedButtonPrimaryColor1 = Colors.greenAccent.shade400;
 Color elevatedButtonPrimaryColor2 = Colors.grey.shade700;
 const Color formFieldTextColor = Colors.white;
 const Color hintTextColor = Colors.white54;
+const Color generalTextColor = Colors.white;
+const Color sideBarGradientLeft = Color.fromRGBO(91, 110, 100, 1);
+const Color sideBarGradientRight = Color.fromRGBO(68, 131, 150, 1);
