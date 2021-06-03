@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';  
 import '../themes.dart';
+import 'authentication_service.dart';
+import 'package:provider/provider.dart';
 
 class ForgetPassword extends StatefulWidget {
+
   @override
-  _ForgetPassClass createState() => _ForgetPassClass();
+  _ForgetPasswordState createState() => _ForgetPasswordState();
 }
 
-class _ForgetPassClass extends State<ForgetPassword> {
+class _ForgetPasswordState extends State<ForgetPassword> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool mailSent = false;
-  String email;
+  final TextEditingController emailController = TextEditingController();
+  bool isUserLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,79 +29,103 @@ class _ForgetPassClass extends State<ForgetPassword> {
 
       body: Center(
         child: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
 
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-            child: Form(
-              key: _formKey,
-              child: Container(
-                child: Column(
-                  children: <Widget>[
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+              child: Form(
+                key: _formKey,
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 13.0),
-                      child: TextFormField(
-                        style: TextStyle(color: formFieldTextColor),
-                        keyboardType: TextInputType.emailAddress,
-                        onSaved: (String value) {
-                          email = value;
-                        },
-                        decoration: const InputDecoration(
-                          hintText: 'Email Address',
-                          hintStyle: TextStyle(color: hintTextColor),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 13.0),
+                        child: TextFormField(
+                          controller: emailController,
+                          style: TextStyle(color: formFieldTextColor),
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            hintText: 'Email Address',
+                            hintStyle: TextStyle(color: hintTextColor),
+                          ),
+                          validator: (String value) {
+                            if (value.trim().isEmpty) {
+                              return 'Enter a valid Email Address';
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (String value) {
-                          if (value.trim().isEmpty) {
-                            return 'Enter a valid Email Address';
+                      ),
+
+                      isUserLoading ? CircularProgressIndicator() :
+                      ElevatedButton(
+                        child: Text('Go'),
+                        style: ElevatedButton.styleFrom(
+                          primary: elevatedButtonPrimaryColor1,
+                          textStyle: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600
+                          )
+                        ),
+                        onPressed: () {
+                          _formKey.currentState.save();
+                          setState(() { isUserLoading = true; });
+                          if (_formKey.currentState.validate()) {
+                            forgetPasswordMail();
                           }
-                          return null;
                         },
                       ),
-                    ),
 
-                    ElevatedButton(
-                      child: Text('GO'),
-                      style: ElevatedButton.styleFrom(
-                        primary: elevatedButtonPrimaryColor1,
-                        // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        textStyle: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold
-                        )
-                      ),
-                      onPressed: () {
-                        _formKey.currentState.save();
-                        if (_formKey.currentState.validate()) {
+                      ElevatedButton(
+                        child: Text('Sign In'),
+                        style: ElevatedButton.styleFrom(
+                          primary: elevatedButtonPrimaryColor2,
+                          textStyle: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600
+                          )
+                        ),
+                        onPressed: () {
                           Navigator.pop(context);
-                        }
-                      },
-                    ),
-
-                    ElevatedButton(
-                      child: Text('SIGN IN'),
-                      style: ElevatedButton.styleFrom(
-                        primary: elevatedButtonPrimaryColor2,
-                        textStyle: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold
-                        )
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-    ),);
+    );
+  }
+
+  void forgetPasswordMail() async {
+    String returnMsg = await context.read<AuthenticationService>().forgetPassword(email: emailController.text.trim());
+    _formKey.currentState.reset();
+    setState(() { isUserLoading = false; });
+    if(returnMsg == "Success"){
+      Fluttertoast.showToast(  
+        msg: 'Email notif Sent',  
+        toastLength: Toast.LENGTH_SHORT,  
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: elevatedButtonPrimaryColor2,  
+        textColor: hintTextColor  
+      );
+      Navigator.pop(context);
+    }else{
+      Fluttertoast.showToast(  
+        msg: returnMsg,  
+        toastLength: Toast.LENGTH_SHORT,  
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: elevatedButtonPrimaryColor2,  
+        textColor: hintTextColor  
+      );
+    }
   }
 }

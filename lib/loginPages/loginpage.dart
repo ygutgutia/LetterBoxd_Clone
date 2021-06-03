@@ -165,7 +165,7 @@ class _LoginClass extends State<LoginPage> {
         return regExp.hasMatch(value);
   }
 
-  void _submitForm() async{
+  void _submitForm() async {
 
     String returnMsg = (_currAuth == AuthPage.Login) ?
             await context.read<AuthenticationService>().signIn(email: emailEntered.trim(), password: passwordEntered.trim()) :

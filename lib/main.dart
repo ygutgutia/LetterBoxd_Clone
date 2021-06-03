@@ -18,12 +18,7 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp>{
+class MyApp extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
@@ -43,7 +38,7 @@ class _MyAppState extends State<MyApp>{
         title: 'MyAppPage',
         theme: ThemeData(
           primarySwatch: primarySwatchColor,
-          fontFamily: 'Oswald',
+          fontFamily: 'assets/Fonts/Oswald',
         ),
 
         home: IntroScreen(),
