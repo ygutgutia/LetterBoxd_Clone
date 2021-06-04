@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:letterboxd/loginPages/SignUpUserDetails.dart';
 import 'package:provider/provider.dart';
 import 'package:splashscreen/splashscreen.dart';
 
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
           '/homepage': (BuildContext context) => HomePage(),
           '/forgetPassword':  (BuildContext context) => ForgetPassword(),
           '/profilePage': (BuildContext context) => UserProfilePage(),
+          '/signupuserdetail': (BuildContext context) => SignUpDetails(),
         },
       ),
     );
@@ -59,17 +61,18 @@ class IntroScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     User result = FirebaseAuth.instance.currentUser;
     return new SplashScreen(
-        navigateAfterSeconds: result != null ? HomePage() : LoginPage(),
-        seconds: 2,
-        title: new Text(
-          'Welcome To Meet up!',
-          style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-        ),
-        image: Image.asset('assets/images/splashScreen.jpg', fit: BoxFit.scaleDown),
-        backgroundColor: Colors.white,
-        styleTextUnderTheLoader: new TextStyle(),
-        photoSize: 100.0,
-        onClick: () => print("flutter"),
-        loaderColor: Colors.red);
+      navigateAfterSeconds: result != null ? HomePage() : LoginPage(),
+      seconds: 2,
+      title: new Text(
+        'Welcome To Meet up!',
+        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+      ),
+      image: Image.asset('assets/images/splashScreen.jpg', fit: BoxFit.scaleDown),
+      backgroundColor: Colors.white,
+      styleTextUnderTheLoader: new TextStyle(),
+      photoSize: 100.0,
+      onClick: () => print("flutter"),
+      loaderColor: Colors.red
+    );
   }
 }

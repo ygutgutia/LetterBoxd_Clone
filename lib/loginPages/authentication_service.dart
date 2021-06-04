@@ -35,6 +35,7 @@ class AuthenticationService {
   Future<String> signUp({String email, String password}) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.currentUser.sendEmailVerification();
       return "Success";
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -49,6 +50,10 @@ class AuthenticationService {
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
+  }
+
+  bool isUserverified({String email, String password}) {
+    return _firebaseAuth.currentUser.emailVerified;
   }
   
 }

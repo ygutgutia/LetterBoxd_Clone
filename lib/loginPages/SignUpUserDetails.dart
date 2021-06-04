@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'authentication_service.dart';
+
+import '../themes.dart';
 
 class SignUpDetails extends StatefulWidget {  
   @override
@@ -9,8 +14,8 @@ class SignUpDetails extends StatefulWidget {
 class _SignUpDetailsClass extends State<SignUpDetails> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _passwordCont = TextEditingController();
-  String name, phNo, dob, photoLink;
+  String name, username, phNo, dob, photoLink;
+  bool isUserLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +50,25 @@ class _SignUpDetailsClass extends State<SignUpDetails> {
                           name = value;
                         },
                         decoration: const InputDecoration(
+                          hintText: 'Enter your Name',
+                        ),
+                        validator: (String value) {
+                          if (value.trim().isEmpty) {
+                            return 'Please enter your username';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 13.0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        onSaved: (String value) {
+                          username = value;
+                        },
+                        decoration: const InputDecoration(
                           hintText: 'Enter your Username',
                         ),
                         validator: (String value) {
@@ -59,7 +83,6 @@ class _SignUpDetailsClass extends State<SignUpDetails> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 13.0),
                       child: TextFormField(
-                        controller: _passwordCont,
                         obscureText: true,
                         onSaved: (String value) {
                             phNo = value;
@@ -79,7 +102,6 @@ class _SignUpDetailsClass extends State<SignUpDetails> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 13.0),
                       child: TextFormField(
-                        controller: _passwordCont,
                         obscureText: true,
                         onSaved: (String value) {
                             dob = value;
@@ -99,13 +121,12 @@ class _SignUpDetailsClass extends State<SignUpDetails> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 13.0),
                       child: TextFormField(
-                        controller: _passwordCont,
                         obscureText: true,
                         onSaved: (String value) {
                             photoLink = value;
                         },
                         decoration: const InputDecoration(
-                          hintText: 'Enter your photoLink',
+                          hintText: 'Enter your photoLink(temp enter anythin)',
                         ),
                         validator: (String value) {
                           if (value.trim().isEmpty) {
@@ -118,33 +139,19 @@ class _SignUpDetailsClass extends State<SignUpDetails> {
 
                     SizedBox(height: 13.0,),
 
-                    // ScopedModelDescendant<MainModel>(
-                    //   builder: (BuildContext context, Widget child, MainModel model) {
-                    //     return model.isUserLoading ? CircularProgressIndicator() : ElevatedButton(
-                    //       child: Text('Save Details'),
-                    //       onPressed: () {
-                    //         _formKey.currentState.save();
-                    //         if (_formKey.currentState.validate()) {
-                    //           if(FirebaseAuth.instance.currentUser.emailVerified){
-                    //             model.updateAuthDetails(name, phNo, dob, photoLink);
-                    //             Navigator.pushReplacementNamed(context, '/homepage');
-                    //           }else{
-                    //             Fluttertoast.showToast(
-                    //               msg: "Verify your email",
-                    //               toastLength: Toast.LENGTH_SHORT,
-                    //               gravity: ToastGravity.CENTER,
-                    //               timeInSecForIosWeb: 1,
-                    //               backgroundColor: Colors.red,
-                    //               textColor: Colors.white,
-                    //               fontSize: 16.0
-                    //             );
-                    //           }
-                    //         }
-                    //       },
-                    //     );
-                    //   },
-                    // ),
-
+                    isUserLoading ? CircularProgressIndicator() : ElevatedButton(
+                      child: Text('Save Details'),
+                      onPressed: () {
+                        _formKey.currentState.save();
+                        if (_formKey.currentState.validate()) {
+                          setState(() {
+                            isUserLoading = true;
+                          });
+                          saveDetails();
+                          Navigator.pushReplacementNamed(context, '/loginpage');
+                        }
+                      },
+                    )
                   ],
                 ),
               ),
@@ -153,6 +160,24 @@ class _SignUpDetailsClass extends State<SignUpDetails> {
         ),
       ),
     ),);
+  }
+
+  void saveDetails(){
+
+    //Save data to firebase
+
+    setState(() {
+      isUserLoading = false;  
+    });
+    Fluttertoast.showToast(
+      msg: "Data Saved. Kindly login again",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: elevatedButtonPrimaryColor2,
+      textColor: hintTextColor,
+      fontSize: 16.0
+    );
   }
 }
 

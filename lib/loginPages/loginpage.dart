@@ -173,14 +173,21 @@ class _LoginClass extends State<LoginPage> {
 
     if (returnMsg == "Success") {
       _formKey.currentState.reset();
-      isUserLoading = false;
       if(_currAuth == AuthPage.Signup)
-        Navigator.pushReplacementNamed(context, '/homepage');
-      else
-        Navigator.pushReplacementNamed(context, '/homepage');
+        Navigator.pushReplacementNamed(context, '/signupuserdetail');
+      else{
+        if(!context.read<AuthenticationService>().isUserverified())
+          returnMsg = "Please verify Email Address.";
+        else
+          Navigator.pushReplacementNamed(context, '/homepage');
+      }
     }
-    else {
-      print(returnMsg);
+
+    setState(() {
+      isUserLoading = false;
+    });
+
+    if(returnMsg != "Success") {
       _formKey.currentState.reset();
       showDialog(
         context: context,
@@ -198,7 +205,6 @@ class _LoginClass extends State<LoginPage> {
           );
         },
       );
-    }
-
+    }      
   }
 }
