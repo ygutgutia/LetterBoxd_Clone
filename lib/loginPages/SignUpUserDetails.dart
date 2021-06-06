@@ -148,7 +148,6 @@ class _SignUpDetailsClass extends State<SignUpDetails> {
                             isUserLoading = true;
                           });
                           saveDetails();
-                          Navigator.pushReplacementNamed(context, '/loginpage');
                         }
                       },
                     )
@@ -162,15 +161,19 @@ class _SignUpDetailsClass extends State<SignUpDetails> {
     ),);
   }
 
-  void saveDetails(){
+  void saveDetails() async {
 
-    //Save data to firebase
+    String returnMsg = await context.read<AuthenticationService>().setUserDetails(name, username, phNo, dob, photoLink);
+    String toastMsg = "Profile Updated";
+    if(returnMsg!="Success"){
+      toastMsg = returnMsg;
+    }
 
     setState(() {
       isUserLoading = false;  
     });
     Fluttertoast.showToast(
-      msg: "Data Saved. Kindly login again",
+      msg: toastMsg,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,
@@ -178,6 +181,11 @@ class _SignUpDetailsClass extends State<SignUpDetails> {
       textColor: hintTextColor,
       fontSize: 16.0
     );
+
+    
+    if(returnMsg=="Success"){
+      Navigator.pushReplacementNamed(context, '/loginpage');
+    }
   }
 }
 

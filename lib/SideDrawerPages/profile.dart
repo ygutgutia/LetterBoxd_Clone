@@ -1,30 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import '../loginPages/authentication_service.dart';
+import '../themes.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
   UserProfilePageState createState() => UserProfilePageState();
 }
 
-class UserProfilePageState extends State<UserProfilePage>
-    with SingleTickerProviderStateMixin {
+class UserProfilePageState extends State<UserProfilePage> with SingleTickerProviderStateMixin {
+
+  Map<String, dynamic> curruser;
+  bool isUserLoaded = false;
   bool _status = true;
-  String dropdownValue = "Student";
-  final FocusNode myFocusNode = FocusNode();
+  final TextEditingController _nameCont = TextEditingController();
+  final TextEditingController _usernameCont = TextEditingController();
+  final TextEditingController _dobCont = TextEditingController();
+  @override
+  void initState() {
+    loadUser();
+    super.initState();
+  }
+
+  void loadUser() async {
+    curruser = await context.read<AuthenticationService>().getUserDetails();
+    setState(() {
+      isUserLoaded = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: appBGColor,
       appBar: AppBar(centerTitle: true, title: Text('Profile')),
-      body: new Container(
-        color: Colors.white,
+      body: !isUserLoaded ? CircularProgressIndicator() : new Container(
         child: new ListView(
           children: <Widget>[
             Column(
               children: <Widget>[
                 new Container(
                   height: 200.0,
-                  color: Colors.white,
                   child: new Container(
                     child: Padding(
                       padding: EdgeInsets.only(top: 20.0),
@@ -71,7 +89,6 @@ class UserProfilePageState extends State<UserProfilePage>
                   ),
                 ),
                 new Container(
-                  color: Color(0xffFFFFFF),
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 25.0),
                     child: new Column(
@@ -92,8 +109,9 @@ class UserProfilePageState extends State<UserProfilePage>
                                   new Text(
                                     'Personal Information',
                                     style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold),
+                                      color: formFieldTextColor,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
@@ -120,6 +138,7 @@ class UserProfilePageState extends State<UserProfilePage>
                                   new Text(
                                     'Name',
                                     style: TextStyle(
+                                        color: formFieldTextColor,
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -135,11 +154,20 @@ class UserProfilePageState extends State<UserProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               new Flexible(
-                                child: new TextField(
+                                child: _status ? new Text(curruser["name"], style: TextStyle(color: hintTextColor)) : 
+                                new TextFormField(
+                                  controller: _nameCont,
+                                  style: TextStyle(color: formFieldTextColor),
                                   decoration: const InputDecoration(
-                                    hintText: "Enter Your Name",
+                                    hintText: 'Enter Your Name',
+                                    hintStyle: TextStyle(color: hintTextColor),
                                   ),
-                                  enabled: !_status,
+                                  validator: (String value) {
+                                    if (value.trim().isEmpty) {
+                                      return 'Enter a valid name';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                             ],
@@ -158,8 +186,9 @@ class UserProfilePageState extends State<UserProfilePage>
                                   new Text(
                                     'Email ID',
                                     style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
+                                      color: formFieldTextColor,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
@@ -173,11 +202,7 @@ class UserProfilePageState extends State<UserProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               new Flexible(
-                                child: new TextField(
-                                  decoration: const InputDecoration(
-                                      hintText: "Enter Email ID"),
-                                  enabled: !_status,
-                                ),
+                                child: new Text(curruser["email"], style: TextStyle(color: hintTextColor),)
                               ),
                             ],
                           ),
@@ -195,8 +220,9 @@ class UserProfilePageState extends State<UserProfilePage>
                                   new Text(
                                     'Mobile',
                                     style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
+                                      color: formFieldTextColor,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
@@ -210,11 +236,7 @@ class UserProfilePageState extends State<UserProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               new Flexible(
-                                child: new TextField(
-                                  decoration: const InputDecoration(
-                                      hintText: "Enter Mobile Number"),
-                                  enabled: !_status,
-                                ),
+                                child: new Text(curruser["phNo"], style: TextStyle(color: hintTextColor),)
                               ),
                             ],
                           ),
@@ -229,10 +251,11 @@ class UserProfilePageState extends State<UserProfilePage>
                               Expanded(
                                 child: Container(
                                   child: new Text(
-                                    'State',
+                                    'UserName',
                                     style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
+                                      color: formFieldTextColor,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 flex: 2,
@@ -240,10 +263,11 @@ class UserProfilePageState extends State<UserProfilePage>
                               Expanded(
                                 child: Container(
                                   child: new Text(
-                                    'Position',
+                                    'DOB',
                                     style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
+                                      color: formFieldTextColor,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 flex: 2,
@@ -261,17 +285,43 @@ class UserProfilePageState extends State<UserProfilePage>
                               Flexible(
                                 child: Padding(
                                   padding: EdgeInsets.only(right: 10.0),
-                                  child: new TextField(
+                                  child: _status ? new Text(curruser["username"], style: TextStyle(color: hintTextColor)) : 
+                                  new TextFormField(
+                                    controller: _usernameCont,
+                                    style: TextStyle(color: formFieldTextColor),
                                     decoration: const InputDecoration(
-                                        hintText: "Enter State"),
-                                    enabled: !_status,
-                                    autofocus: !_status,
+                                      hintText: 'Enter Username',
+                                      hintStyle: TextStyle(color: hintTextColor),
+                                    ),
+                                    validator: (String value) {
+                                      if (value.trim().isEmpty) {
+                                        return 'Enter a valid Username';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
                                 flex: 2,
                               ),
                               Flexible(
-                                child: _pos(),
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 10.0),
+                                  child: _status ? new Text(curruser["dob"], style: TextStyle(color: hintTextColor)) : 
+                                  new TextFormField(
+                                    controller: _dobCont,
+                                    style: TextStyle(color: formFieldTextColor),
+                                    decoration: const InputDecoration(
+                                      hintText: 'Enter DOB',
+                                      hintStyle: TextStyle(color: hintTextColor),
+                                    ),
+                                    validator: (String value) {
+                                      if (value.trim().isEmpty) {
+                                        return 'Enter a valid dob';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
                                 flex: 2,
                               ),
                             ],
@@ -285,7 +335,7 @@ class UserProfilePageState extends State<UserProfilePage>
               ],
             ),
             TextButton(
-              child: Text("Change"),
+              child: Text("Go Back"),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -294,45 +344,6 @@ class UserProfilePageState extends State<UserProfilePage>
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the Widget is disposed
-    myFocusNode.dispose();
-    super.dispose();
-  }
-
-  Widget _pos() {
-    if (_status) {
-      return new TextField(
-        decoration: const InputDecoration(hintText: "Enter Pin Code"),
-      );
-    } else {
-      return new DropdownButton<String>(
-        value: dropdownValue,
-        icon: Icon(Icons.keyboard_arrow_down),
-        iconSize: 24,
-        elevation: 16,
-        style: TextStyle(color: Colors.black),
-        underline: Container(
-          height: 2,
-          color: Colors.black,
-        ),
-        onChanged: (String newValue) {
-          setState(() {
-            dropdownValue = newValue;
-          });
-        },
-        items: <String>['Student', 'Administration']
-            .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      );
-    }
   }
 
   Widget _getActionButtons() {
@@ -349,14 +360,15 @@ class UserProfilePageState extends State<UserProfilePage>
                 child: new ElevatedButton(
                   child: new Text("Save"),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    primary: elevatedButtonPrimaryColor1,
                     shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(20.0)
                     ),
-                    textStyle: TextStyle(color: Colors.white),
+                    textStyle: TextStyle(color: formFieldTextColor),
                   ),
                   onPressed: () {
-                    //do
+                    updateDetail();
+                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -370,11 +382,11 @@ class UserProfilePageState extends State<UserProfilePage>
                 child: new ElevatedButton(
                   child: new Text("Cancel"),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
+                    primary: elevatedButtonPrimaryColor2,
                     shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(20.0)
                     ),
-                    textStyle: TextStyle(color: Colors.white),
+                    textStyle: TextStyle(color: formFieldTextColor),
                   ),
                   onPressed: () {
                     setState(() {
@@ -408,6 +420,20 @@ class UserProfilePageState extends State<UserProfilePage>
           _status = false;
         });
       },
+    );
+  }
+
+  void updateDetail() async {
+    setState(() {
+      isUserLoaded = false;
+    });
+    String returnMsg = await context.read<AuthenticationService>().updateUserDetails(_nameCont.text, _usernameCont.text, _dobCont.text);
+    Fluttertoast.showToast(  
+      msg: returnMsg,  
+      toastLength: Toast.LENGTH_SHORT,  
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: elevatedButtonPrimaryColor2,  
+      textColor: hintTextColor  
     );
   }
 }

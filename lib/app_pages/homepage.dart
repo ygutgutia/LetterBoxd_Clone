@@ -47,8 +47,8 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
 
           new UserAccountsDrawerHeader(
-            accountName: new Text("curruser.name"), // Some error showing null first time
-            accountEmail: new Text("curruser.emailID"),
+            accountName: new Text("curruser - jazzbythe"), // Some error showing null first time
+            accountEmail: new Text(curruser.email),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.grey,
               child: Text('U', style: TextStyle(color: Colors.black87))
