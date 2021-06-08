@@ -8,7 +8,7 @@ import 'package:splashscreen/splashscreen.dart';
 import 'themes.dart';
 import 'loginPages/SignUpUserDetails.dart';
 import 'loginPages/forgetPasswordPage.dart';
-import 'loginPages/authentication_service.dart';
+import 'apis/authentication_service.dart';
 import 'loginPages/loginpage.dart';
 import 'SideDrawerPages/profile.dart';
 import 'app_pages/homepage.dart';
