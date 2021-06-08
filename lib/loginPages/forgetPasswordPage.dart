@@ -73,8 +73,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         ),
                         onPressed: () {
                           _formKey.currentState.save();
-                          setState(() { isUserLoading = true; });
                           if (_formKey.currentState.validate()) {
+                            setState(() { isUserLoading = true; });
                             forgetPasswordMail();
                           }
                         },
