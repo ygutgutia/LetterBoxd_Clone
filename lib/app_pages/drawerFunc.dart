@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../themes.dart';
 import 'package:provider/provider.dart';
-import '../apis/authentication_service.dart';
+
+import 'package:letterboxd/themes.dart';
+import 'package:letterboxd/apis/authentication_service.dart';
 
 
 class WidgetDrawer extends StatelessWidget{
@@ -14,7 +15,6 @@ class WidgetDrawer extends StatelessWidget{
     return Drawer(
       child: new ListView(
         children: <Widget>[
-
           new UserAccountsDrawerHeader(
             accountName: new Text(username), // Some error showing null first time
             accountEmail: new Text(email),

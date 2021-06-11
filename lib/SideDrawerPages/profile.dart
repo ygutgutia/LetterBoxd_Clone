@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../apis/authentication_service.dart';
-import '../themes.dart';
+
+import 'package:letterboxd/apis/authentication_service.dart';
+import 'package:letterboxd/themes.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override

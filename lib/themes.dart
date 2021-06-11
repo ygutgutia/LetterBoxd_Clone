@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-
 const Color primarySwatchColor = Colors.blueGrey;
 // const Color appBGColor = Color.fromRGBO(35,43,51,1);
 const Color appBGColor = Color.fromRGBO(70,80,95,1);
@@ -12,3 +11,7 @@ const Color hintTextColor = Colors.white54;
 const Color generalTextColor = Colors.white;
 const Color sideBarGradientLeft = Color.fromRGBO(91, 110, 100, 1);
 const Color sideBarGradientRight = Color.fromRGBO(68, 131, 150, 1);
+
+const Color CardText = Colors.white;
+Color cardTextSubs = Colors.white.withOpacity(0.6);
+const Color colorcardBG = Color.fromRGBO(90, 100, 115, 1);

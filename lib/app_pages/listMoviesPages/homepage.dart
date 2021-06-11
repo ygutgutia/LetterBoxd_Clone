@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../apis/movie_list.dart';
 import 'package:provider/provider.dart';
 
-import './drawerFunc.dart';
-import '../themes.dart';
-import 'loadMovieCards.dart';
+import 'package:letterboxd/apis/movie_list.dart';
+import 'package:letterboxd/app_pages/drawerFunc.dart';
+import 'package:letterboxd/themes.dart';
+import 'package:letterboxd/app_pages/listMoviesPages/loadMovieCards.dart';
 
 class HomePage extends StatefulWidget {
   @override

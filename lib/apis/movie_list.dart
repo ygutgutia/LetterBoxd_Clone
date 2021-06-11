@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import './moviedb_apikey.dart';
-import '../models/movie_detail.dart';
+import 'package:letterboxd/apis/moviedb_apikey.dart';
+import 'package:letterboxd/models/movie_detail.dart';
 
 class MovieList {
   List<Movies> _movieList;
@@ -18,7 +18,6 @@ class MovieList {
       return false;
 
     movieListRecv['results'].forEach((dynamic movieData) {
-      print(movieData);
       final Movies movieInit = Movies(
         posterPath : imgBaseLink+movieData['poster_path'],
         adult : movieData['adult'],
@@ -33,7 +32,7 @@ class MovieList {
         popularity : movieData['popularity'],
         voteCount : movieData['voteCount'],
         video : movieData['video'],
-        voteAverage : movieData['voteAverage']
+        voteAverage : movieData['vote_average']
       );
       fetchedMovieList.add(movieInit);
     });

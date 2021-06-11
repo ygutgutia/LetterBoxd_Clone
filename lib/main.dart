@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:letterboxd/apis/movie_list.dart';
+import 'package:letterboxd/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:splashscreen/splashscreen.dart';
 
-import 'themes.dart';
-import 'loginPages/SignUpUserDetails.dart';
-import 'loginPages/forgetPasswordPage.dart';
-import 'apis/authentication_service.dart';
-import 'loginPages/loginpage.dart';
-import 'SideDrawerPages/profile.dart';
-import 'app_pages/homepage.dart';
+import 'package:letterboxd/apis/movie_list.dart';
+import 'package:letterboxd/themes.dart';
+// import 'package:letterboxd/loginPages/SignUpUserDetails.dart';
+// import 'package:letterboxd/loginPages/forgetPasswordPage.dart';
+import 'package:letterboxd/apis/authentication_service.dart';
+import 'package:letterboxd/loginPages/loginpage.dart';
+// import 'package:letterboxd/SideDrawerPages/profile.dart';
+import 'package:letterboxd/app_pages/listMoviesPages/homepage.dart';
+// import 'package:letterboxd/app_pages/movieData/movieExpand.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +30,6 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<AuthenticationService>(create: (_) => AuthenticationService(FirebaseAuth.instance, FirebaseFirestore.instance)),
         Provider<MovieList>(create: (_) => MovieList())
-        // StreamProvider(create: (context) => context.read<AuthenticationService>().authStateChanges, initialData: null)
       ],
 
       child: MaterialApp(
@@ -41,13 +42,18 @@ class MyApp extends StatelessWidget {
 
         home: IntroScreen(),
 
-        routes: {
-          '/loginpage': (BuildContext context) => LoginPage(),
-          '/homepage': (BuildContext context) => HomePage(),
-          '/forgetPassword':  (BuildContext context) => ForgetPassword(),
-          '/profilePage': (BuildContext context) => UserProfilePage(),
-          '/signupuserdetail': (BuildContext context) => SignUpDetails(),
-        },
+        onGenerateRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+          builder: (BuildContext context) => makeRoute(
+            context: context,
+            routeName: settings.name,
+            arguments: settings.arguments,
+          ),
+          maintainState: true,
+          fullscreenDialog: false,
+        );
+      },
+
       ),
     );
 	}

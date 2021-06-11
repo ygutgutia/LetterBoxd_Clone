@@ -5,9 +5,7 @@ class AuthenticationService {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestoreAuth;
   AuthenticationService(this._firebaseAuth, this._firestoreAuth);
-
-//   Changed to idTokenChanges as it updates depending on more cases.
-//   Stream<User> get authStateChanges => _firebaseAuth.idTokenChanges();
+  
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
@@ -63,9 +61,9 @@ class AuthenticationService {
     try{
       Map<String, dynamic> valueTemp;
       await _firestoreAuth.collection("users").doc(_firebaseAuth.currentUser.uid).get().then((value){
-      valueTemp = value.data();
-    });
-    return valueTemp;
+        valueTemp = value.data();
+      });
+      return valueTemp;
     } catch(e) {
       return {"Error": e};
     }

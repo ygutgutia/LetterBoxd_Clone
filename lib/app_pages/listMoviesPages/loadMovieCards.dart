@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../apis/movie_list.dart';
-import '../models/movie_detail.dart';
 import 'package:provider/provider.dart';
-import 'Movie_Tiles.dart';
+
+import 'package:letterboxd/apis/movie_list.dart';
+import 'package:letterboxd/models/movie_detail.dart';
+import 'package:letterboxd/app_pages/listMoviesPages/movie_tiles.dart';
 
 class MovieDispCards extends StatelessWidget {
 
