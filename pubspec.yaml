@@ -34,6 +34,7 @@ dependencies:
   cloud_firestore: ^2.2.1
   provider: ^5.0.0
   splashscreen: ^1.3.5
+  http: ^0.13.3
   
 
 dev_dependencies:
@@ -55,6 +56,7 @@ flutter:
   assets:
     - assets/images/as.jpeg
     - assets/images/splashScreen.jpg
+    - assets/images/imgLoading.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

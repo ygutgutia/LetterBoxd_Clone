@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../apis/movie_list.dart';
+import 'package:provider/provider.dart';
 
 import './drawerFunc.dart';
 import '../themes.dart';
+import 'loadMovieCards.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,12 +13,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   User curruser;
+  bool isMovieListLoading = true;
+  bool success = false;
+
   @override
   void initState() {
     curruser = FirebaseAuth.instance.currentUser;
+    _fetchlist();
     super.initState();
+  }
+
+  void _fetchlist() async {
+    success = await context.read<MovieList>().fetchMovies();
+    setState(() {
+      isMovieListLoading = false;
+    });
   }
 
   @override
@@ -27,16 +40,15 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: Text('Movie List'),
       ),
-
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('You have pushed the button this many times:',
-                  style: TextStyle(color: generalTextColor),),
-          ],
-        ),
-      ),
+      body: isMovieListLoading ? Center(child: CircularProgressIndicator()) : 
+            !success ? Center(child: Text("Load Failed"),) :
+          Column(
+            children: <Widget>[
+              Expanded(
+                child: MovieDispCards(),
+              ),
+            ],
+          ),
     );
   }
 }

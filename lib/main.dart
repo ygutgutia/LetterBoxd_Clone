@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:letterboxd/apis/movie_list.dart';
 import 'package:provider/provider.dart';
 import 'package:splashscreen/splashscreen.dart';
 
@@ -25,13 +26,9 @@ class MyApp extends StatelessWidget {
 	Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthenticationService>(
-          create: (_) => AuthenticationService(FirebaseAuth.instance, FirebaseFirestore.instance),
-        ),
-        StreamProvider(
-          create: (context) => context.read<AuthenticationService>().authStateChanges,
-          initialData: null,
-        )
+        Provider<AuthenticationService>(create: (_) => AuthenticationService(FirebaseAuth.instance, FirebaseFirestore.instance)),
+        Provider<MovieList>(create: (_) => MovieList())
+        // StreamProvider(create: (context) => context.read<AuthenticationService>().authStateChanges, initialData: null)
       ],
 
       child: MaterialApp(
