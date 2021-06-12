@@ -8,22 +8,13 @@ import 'package:letterboxd/apis/userData.dart';
 
 class MovieDispCards extends StatelessWidget {
 
-  Widget _buildProductList(List<Movies> products) {
-    Widget productCard;
-    if(products.length > 0){
-      productCard = ListView.builder(
-        itemCount: products.length,
-        itemBuilder: (BuildContext context, int index) => MovieTile(products, index, context.read<UserData>().isLikedByUser(products[index].id)),
-      );
-    }
-    else{
-      productCard = Center(child: Text('No Movies Found'));
-    }
-    return productCard;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return _buildProductList(context.read<MovieList>().products);
+    List<Movies> products = context.read<MovieList>().products;
+    return (products.length <= 0) ? Center(child: Text('No Movies Found'))
+      : ListView.builder(
+          itemCount: products.length,
+          itemBuilder: (BuildContext context, int index) => MovieTile(products, index, context.watch<UserData>().isLikedByUser(products[index].id)),
+        );
   }
 }

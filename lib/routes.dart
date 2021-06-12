@@ -26,7 +26,7 @@ Widget _buildRoute({ @required BuildContext context, @required String routeName,
       return SignUpDetails();
     case '/moviedetails':
       List<dynamic> args = arguments;
-      return MovieDetails(args[0], args[1]);
+      return MovieDetails(args[0]);
     default:
       throw 'Route $routeName is not defined';
   }

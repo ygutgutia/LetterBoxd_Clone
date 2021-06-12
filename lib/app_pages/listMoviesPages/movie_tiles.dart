@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:letterboxd/apis/userData.dart';
+import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart'; 
 // import 'package:share_plus/share_plus.dart';
 
 import 'package:letterboxd/models/movie_detail.dart';
@@ -21,7 +24,7 @@ class MovieTile extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.blue.withAlpha(30),
         onTap: () {
-          Navigator.pushNamed(context, '/moviedetails', arguments: [products[index], likedByUser]);
+          Navigator.pushNamed(context, '/moviedetails', arguments: [products[index]]);
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(18, 12, 18, 12),
@@ -66,7 +69,7 @@ class MovieTile extends StatelessWidget {
                               icon: const Icon(Icons.favorite, size: 24.0),
                               tooltip: 'Add to Favs',
                               onPressed: () {
-                                print("Pressed");
+                                _updateLikes(context, products[index].id);
                               },
                             ),
                             IconButton(
@@ -87,6 +90,18 @@ class MovieTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _updateLikes(BuildContext context, int movieid) async {
+    String success = likedByUser ? await context.read<UserData>().updateLikes(movieid, false)
+                : await context.read<UserData>().updateLikes(movieid, true);
+    Fluttertoast.showToast(  
+      msg: success,  
+      toastLength: Toast.LENGTH_SHORT,  
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: elevatedButtonPrimaryColor2,  
+      textColor: hintTextColor  
     );
   }
 }

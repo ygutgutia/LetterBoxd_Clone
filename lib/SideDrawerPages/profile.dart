@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:letterboxd/themes.dart';
 import 'package:letterboxd/apis/userData.dart';
+import 'package:letterboxd/models/user_details.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -13,27 +14,16 @@ class UserProfilePage extends StatefulWidget {
 
 class UserProfilePageState extends State<UserProfilePage> with SingleTickerProviderStateMixin {
 
-  Map<String, dynamic> curruser;
-  bool isUserLoaded = false;
+  UserDetail curruser;
+  bool isUserLoaded = true;
   bool _status = true;
   final TextEditingController _nameCont = TextEditingController();
   final TextEditingController _usernameCont = TextEditingController();
   final TextEditingController _dobCont = TextEditingController();
-  @override
-  void initState() {
-    loadUser();
-    super.initState();
-  }
-
-  void loadUser() {
-    curruser = context.read<UserData>().getUserDetails();
-    setState(() {
-      isUserLoaded = true;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    curruser = context.watch<UserData>().getUserDetails();
     return new Scaffold(
       backgroundColor: appBGColor,
       appBar: AppBar(centerTitle: true, title: Text('Profile')),
@@ -155,7 +145,7 @@ class UserProfilePageState extends State<UserProfilePage> with SingleTickerProvi
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               new Flexible(
-                                child: _status ? new Text(curruser["name"], style: TextStyle(color: hintTextColor)) : 
+                                child: _status ? new Text(curruser.name, style: TextStyle(color: hintTextColor)) : 
                                 new TextFormField(
                                   controller: _nameCont,
                                   style: TextStyle(color: formFieldTextColor),
@@ -203,7 +193,7 @@ class UserProfilePageState extends State<UserProfilePage> with SingleTickerProvi
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               new Flexible(
-                                child: new Text(curruser["email"], style: TextStyle(color: hintTextColor),)
+                                child: new Text(curruser.email, style: TextStyle(color: hintTextColor),)
                               ),
                             ],
                           ),
@@ -237,7 +227,7 @@ class UserProfilePageState extends State<UserProfilePage> with SingleTickerProvi
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               new Flexible(
-                                child: new Text(curruser["phNo"], style: TextStyle(color: hintTextColor),)
+                                child: new Text(curruser.phNo, style: TextStyle(color: hintTextColor),)
                               ),
                             ],
                           ),
@@ -286,7 +276,7 @@ class UserProfilePageState extends State<UserProfilePage> with SingleTickerProvi
                               Flexible(
                                 child: Padding(
                                   padding: EdgeInsets.only(right: 10.0),
-                                  child: _status ? new Text(curruser["username"], style: TextStyle(color: hintTextColor)) : 
+                                  child: _status ? new Text(curruser.username, style: TextStyle(color: hintTextColor)) : 
                                   new TextFormField(
                                     controller: _usernameCont,
                                     style: TextStyle(color: formFieldTextColor),
@@ -307,7 +297,7 @@ class UserProfilePageState extends State<UserProfilePage> with SingleTickerProvi
                               Flexible(
                                 child: Padding(
                                   padding: EdgeInsets.only(right: 10.0),
-                                  child: _status ? new Text(curruser["dob"], style: TextStyle(color: hintTextColor)) : 
+                                  child: _status ? new Text(curruser.dob, style: TextStyle(color: hintTextColor)) : 
                                   new TextFormField(
                                     controller: _dobCont,
                                     style: TextStyle(color: formFieldTextColor),
@@ -369,7 +359,10 @@ class UserProfilePageState extends State<UserProfilePage> with SingleTickerProvi
                   ),
                   onPressed: () {
                     updateDetail();
-                    Navigator.pop(context);
+                    setState(() {
+                      isUserLoaded = true;
+                      _status = true;
+                    });
                   },
                 ),
               ),
@@ -428,7 +421,10 @@ class UserProfilePageState extends State<UserProfilePage> with SingleTickerProvi
     setState(() {
       isUserLoaded = false;
     });
-    String returnMsg = await context.read<UserData>().updateUserDetails(_nameCont.text, _usernameCont.text, _dobCont.text);
+    String returnMsg = await context.read<UserData>().updateUserDetails(
+        _nameCont.text == "" ? curruser.name : _nameCont.text,
+        _usernameCont.text == "" ? curruser.username : _usernameCont.text,
+        _dobCont.text == "" ? curruser.dob : _dobCont.text);
     Fluttertoast.showToast(  
       msg: returnMsg,  
       toastLength: Toast.LENGTH_SHORT,  

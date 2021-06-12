@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
+import 'package:letterboxd/apis/userData.dart';
 import 'package:letterboxd/models/movie_detail.dart';
 import 'package:letterboxd/themes.dart';
 
 class MovieDetails extends StatelessWidget {
   final Movies movieData;
-  final bool likedByUser;
 
-  MovieDetails(this.movieData, this.likedByUser);
+  MovieDetails(this.movieData);
 
   @override
   Widget build(BuildContext context) {
+    bool likedByUser = context.watch<UserData>().isLikedByUser(movieData.id);
     return Scaffold(
       backgroundColor: appBGColor,
       appBar: AppBar(
@@ -86,7 +89,7 @@ class MovieDetails extends StatelessWidget {
                 backgroundColor: Colors.green,
                 label: Text(''),
                 onPressed: () {
-                  // Navigator.pushNamed(context, '/dateSelect');
+                  _updateLikes(context, movieData.id, likedByUser);
                 }
               ),
               FloatingActionButton.extended(
@@ -102,6 +105,18 @@ class MovieDetails extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _updateLikes(BuildContext context, int movieid, bool likedByUser) async {
+    String success = likedByUser ? await context.read<UserData>().updateLikes(movieid, false)
+                : await context.read<UserData>().updateLikes(movieid, true);
+    Fluttertoast.showToast(  
+      msg: success,  
+      toastLength: Toast.LENGTH_SHORT,  
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: elevatedButtonPrimaryColor2,  
+      textColor: hintTextColor  
     );
   }
 }

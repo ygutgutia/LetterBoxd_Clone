@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<AuthenticationService>(create: (_) => AuthenticationService(FirebaseAuth.instance)),
         Provider<MovieList>(create: (_) => MovieList()),
-        Provider<UserData>(create: (_) => UserData(FirebaseAuth.instance, FirebaseFirestore.instance)),
+        ChangeNotifierProvider<UserData>(create: (_) => UserData(FirebaseAuth.instance, FirebaseFirestore.instance)),
       ],
 
       child: MaterialApp(
@@ -41,16 +41,16 @@ class MyApp extends StatelessWidget {
         home: IntroScreen(),
 
         onGenerateRoute: (RouteSettings settings) {
-        return MaterialPageRoute(
-          builder: (BuildContext context) => makeRoute(
-            context: context,
-            routeName: settings.name,
-            arguments: settings.arguments,
-          ),
-          maintainState: true,
-          fullscreenDialog: false,
-        );
-      },
+          return MaterialPageRoute(
+            builder: (BuildContext context) => makeRoute(
+              context: context,
+              routeName: settings.name,
+              arguments: settings.arguments,
+            ),
+            maintainState: true,
+            fullscreenDialog: false,
+          );
+        },
 
       ),
     );
