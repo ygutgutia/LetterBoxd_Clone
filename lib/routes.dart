@@ -6,7 +6,6 @@ import 'package:letterboxd/loginPages/loginpage.dart';
 import 'package:letterboxd/SideDrawerPages/profile.dart';
 import 'package:letterboxd/app_pages/listMoviesPages/homepage.dart';
 import 'package:letterboxd/app_pages/movieData/movieExpand.dart';
-import 'package:letterboxd/models/movie_detail.dart';
 
 Widget makeRoute({@required BuildContext context, @required String routeName, Object arguments}){
   final Widget child = _buildRoute(context: context, routeName: routeName, arguments: arguments);
@@ -26,8 +25,8 @@ Widget _buildRoute({ @required BuildContext context, @required String routeName,
     case '/signupuserdetail':
       return SignUpDetails();
     case '/moviedetails':
-      Movies movie = arguments as Movies;
-      return MovieDetails(movie);
+      List<dynamic> args = arguments;
+      return MovieDetails(args[0], args[1]);
     default:
       throw 'Route $routeName is not defined';
   }

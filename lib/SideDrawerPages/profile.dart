@@ -3,8 +3,8 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
-import 'package:letterboxd/apis/authentication_service.dart';
 import 'package:letterboxd/themes.dart';
+import 'package:letterboxd/apis/userData.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -25,8 +25,8 @@ class UserProfilePageState extends State<UserProfilePage> with SingleTickerProvi
     super.initState();
   }
 
-  void loadUser() async {
-    curruser = await context.read<AuthenticationService>().getUserDetails();
+  void loadUser() {
+    curruser = context.read<UserData>().getUserDetails();
     setState(() {
       isUserLoaded = true;
     });
@@ -428,7 +428,7 @@ class UserProfilePageState extends State<UserProfilePage> with SingleTickerProvi
     setState(() {
       isUserLoaded = false;
     });
-    String returnMsg = await context.read<AuthenticationService>().updateUserDetails(_nameCont.text, _usernameCont.text, _dobCont.text);
+    String returnMsg = await context.read<UserData>().updateUserDetails(_nameCont.text, _usernameCont.text, _dobCont.text);
     Fluttertoast.showToast(  
       msg: returnMsg,  
       toastLength: Toast.LENGTH_SHORT,  

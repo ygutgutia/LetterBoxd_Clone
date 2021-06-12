@@ -43,4 +43,5 @@ class MovieList {
   List<Movies> get products {
     return List.from(_movieList);
   }
+
 }

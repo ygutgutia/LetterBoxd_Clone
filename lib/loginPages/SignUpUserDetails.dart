@@ -3,8 +3,8 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
-import 'package:letterboxd/apis/authentication_service.dart';
 import 'package:letterboxd/themes.dart';
+import 'package:letterboxd/apis/userData.dart';
 
 class SignUpDetails extends StatefulWidget {  
   @override
@@ -163,7 +163,7 @@ class _SignUpDetailsClass extends State<SignUpDetails> {
 
   void saveDetails() async {
 
-    String returnMsg = await context.read<AuthenticationService>().setUserDetails(name, username, phNo, dob, photoLink);
+    String returnMsg = await context.read<UserData>().setUserDetails(name, username, phNo, dob, photoLink);
     String toastMsg = "Profile Updated";
     if(returnMsg!="Success"){
       toastMsg = returnMsg;

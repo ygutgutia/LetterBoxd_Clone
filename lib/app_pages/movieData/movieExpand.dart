@@ -5,8 +5,9 @@ import 'package:letterboxd/themes.dart';
 
 class MovieDetails extends StatelessWidget {
   final Movies movieData;
+  final bool likedByUser;
 
-  MovieDetails(this.movieData);
+  MovieDetails(this.movieData, this.likedByUser);
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +81,8 @@ class MovieDetails extends StatelessWidget {
             alignment: MainAxisAlignment.end,
             children: [
               FloatingActionButton.extended(
-                icon: Icon(Icons.favorite),
+                heroTag: "button1",
+                icon: Icon(Icons.favorite, color: likedByUser ? Colors.red : Colors.black),
                 backgroundColor: Colors.green,
                 label: Text(''),
                 onPressed: () {
@@ -88,7 +90,8 @@ class MovieDetails extends StatelessWidget {
                 }
               ),
               FloatingActionButton.extended(
-                icon: Icon(Icons.share),
+                heroTag: "button2",
+                icon: Icon(Icons.share, color: Colors.black),
                 backgroundColor: Colors.green,
                 label: Text(''),
                 onPressed: () {

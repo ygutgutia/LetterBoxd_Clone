@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:letterboxd/apis/movie_list.dart';
 import 'package:letterboxd/models/movie_detail.dart';
 import 'package:letterboxd/app_pages/listMoviesPages/movie_tiles.dart';
+import 'package:letterboxd/apis/userData.dart';
 
 class MovieDispCards extends StatelessWidget {
 
@@ -12,7 +13,7 @@ class MovieDispCards extends StatelessWidget {
     if(products.length > 0){
       productCard = ListView.builder(
         itemCount: products.length,
-        itemBuilder: (BuildContext context, int index) => MovieTile(products, index),
+        itemBuilder: (BuildContext context, int index) => MovieTile(products, index, context.read<UserData>().isLikedByUser(products[index].id)),
       );
     }
     else{

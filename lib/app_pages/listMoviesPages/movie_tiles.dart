@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:share_plus/share_plus.dart';
 
 import 'package:letterboxd/models/movie_detail.dart';
 import 'package:letterboxd/themes.dart';
@@ -6,8 +7,9 @@ import 'package:letterboxd/themes.dart';
 class MovieTile extends StatelessWidget {
   final List<Movies> products;
   final int index;
+  final bool likedByUser;
 
-  MovieTile(this.products, this.index);
+  MovieTile(this.products, this.index, this.likedByUser);
   
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class MovieTile extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.blue.withAlpha(30),
         onTap: () {
-          Navigator.pushNamed(context, '/moviedetails', arguments: products[index]);
+          Navigator.pushNamed(context, '/moviedetails', arguments: [products[index], likedByUser]);
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(18, 12, 18, 12),
@@ -58,15 +60,21 @@ class MovieTile extends StatelessWidget {
                         ButtonBar(
                           alignment: MainAxisAlignment.end,
                           children: [
-                            Icon(
-                              Icons.favorite,
-                              size: 24.0,
-                              semanticLabel: 'Text to announce in accessibility modes',
+                            IconButton(
+                              padding: EdgeInsets.all(0.0),
+                              color: likedByUser ? Colors.red : Colors.black,
+                              icon: const Icon(Icons.favorite, size: 24.0),
+                              tooltip: 'Add to Favs',
+                              onPressed: () {
+                                print("Pressed");
+                              },
                             ),
-                            Icon(
-                              Icons.share,
-                              color: Colors.green,
-                              size: 30.0,
+                            IconButton(
+                              icon: const Icon(Icons.share, size: 24.0, color: Colors.green),
+                              tooltip: 'Share',
+                              onPressed: () {
+                                // await Share.share('Check out the movie: '+products[index].title);
+                              },
                             ),
                           ],
                         ),

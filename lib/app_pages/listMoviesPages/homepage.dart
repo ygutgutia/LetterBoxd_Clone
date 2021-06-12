@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:letterboxd/apis/userData.dart';
 import 'package:provider/provider.dart';
 
 import 'package:letterboxd/apis/movie_list.dart';
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   void _fetchlist() async {
     success = await context.read<MovieList>().fetchMovies();
+    await context.read<UserData>().fetchUserDetails();
     setState(() {
       isMovieListLoading = false;
     });
