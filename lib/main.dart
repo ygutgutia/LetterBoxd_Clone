@@ -11,7 +11,7 @@ import 'package:letterboxd/apis/movie_list.dart';
 import 'package:letterboxd/themes.dart';
 import 'package:letterboxd/apis/authentication_service.dart';
 import 'package:letterboxd/loginPages/loginpage.dart';
-import 'package:letterboxd/app_pages/listMoviesPages/homepage.dart';
+import 'package:letterboxd/appPages/listMoviesPages/homepage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

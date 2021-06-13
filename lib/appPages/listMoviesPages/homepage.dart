@@ -4,9 +4,9 @@ import 'package:letterboxd/apis/userData.dart';
 import 'package:provider/provider.dart';
 
 import 'package:letterboxd/apis/movie_list.dart';
-import 'package:letterboxd/app_pages/drawerFunc.dart';
+import 'package:letterboxd/appPages/drawerFunc.dart';
 import 'package:letterboxd/themes.dart';
-import 'package:letterboxd/app_pages/listMoviesPages/loadMovieCards.dart';
+import 'package:letterboxd/appPages/listMoviesPages/loadMovieCards.dart';
 
 class HomePage extends StatefulWidget {
   @override

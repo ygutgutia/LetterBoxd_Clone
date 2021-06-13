@@ -53,8 +53,7 @@ class WidgetDrawer extends StatelessWidget{
             leading: Icon(Icons.shop),
             title: new Text("My Reviews"),
             onTap: () {
-              Navigator.pop(context);
-              //LEFT
+              Navigator.pushNamed(context, '/likedmovies');
             }
           ),
           new Divider(),
